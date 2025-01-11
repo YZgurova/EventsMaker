@@ -1,0 +1,29 @@
+services:
+  frontend:
+    image: 89ade80d107679c58937c58248b1a827b384996bf80ffcc410c5123240b01036
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
+  backend:
+    image: 6027483031c76499b9a920da7f31bc49dc1d8025ed9146857a027e9e7f40a365
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=db
+
+  db:
+    image: mysql
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - D:\MyMusicApp\dataDb:/var/lib/mysql
+
+volumes:
+  MyMusic:
+
