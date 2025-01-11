@@ -117,19 +117,19 @@ public class MySQLEventsRepository implements EventsRepository
                 "INSERT INTO booked_event_to_user (user_id, event_id) VALUES (?,?)";
 
         public static final String GET_EVENT = """
-                        SELECT e.id, e.title, e.description, u.username as author, e.price,
+                        SELECT e.id, e.title, e.description, u.username as author, e.price
                         FROM event as e
                         JOIN user as u
                         ON e.author_id=u.id
                         WHERE e.id=?;""";
         public static final String LIST_ALL_EVENTS = """
-                        SELECT e.id, e.title, e.description, u.username as author, e.price,
+                        SELECT e.id, e.title, e.description, u.username as author, e.price
                         FROM event as e
                         JOIN user as u
                         ON e.author_id=u.id;""";
 
         public static final String LIST_BOOKED_EVENTS = """
-                SELECT e.id, e.title, e.description, u.username as author, e.price,
+                SELECT e.id, e.title, e.description, u.username as author, e.price
                 FROM event as e
                 JOIN user as u
                 ON e.author_id=u.id
@@ -138,7 +138,7 @@ public class MySQLEventsRepository implements EventsRepository
                 WHERE b.user_id=?;""";
 
         public static final String LIST_OWN_EVENTS= """
-                SELECT e.id, e.title, e.description, u.username as author, e.price,
+                SELECT e.id, e.title, e.description, u.username as author, e.price
                 FROM event as e
                 JOIN user as u
                 ON e.author_id = u.id

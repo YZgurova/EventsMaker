@@ -3,12 +3,14 @@ package com.EventsMaker.v1.auth;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -28,27 +30,11 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final RequestMatcher PUBLIC_URLS =
             new OrRequestMatcher(
-                    new AntPathRequestMatcher("/api/auth/**"),
-                    new AntPathRequestMatcher("/api/storage/**"),
-                    new AntPathRequestMatcher("/v3/api-docs"),
-                    new AntPathRequestMatcher("/v3/api-docs/**"),
-                    new AntPathRequestMatcher("/swagger-ui/**"),
-                    new AntPathRequestMatcher("/swagger-ui")
+                    new AntPathRequestMatcher("/api/auth/**")
             );
-    private static final RequestMatcher ADMIN_URLS =
-            new AntPathRequestMatcher("/api/admin/**");
 
-    private static final RequestMatcher SONG_URLS =
-            new AntPathRequestMatcher("/api/song/**");
-
-    private static final RequestMatcher CREATOR_URLS =
-    new AntPathRequestMatcher("/api/creator/**");
-
-    private static final RequestMatcher USER_URLS =
-            new NegatedRequestMatcher(
-                    new OrRequestMatcher(PUBLIC_URLS, CREATOR_URLS));
     private static final RequestMatcher PROTECTED_URLS =
-            new OrRequestMatcher(USER_URLS, ADMIN_URLS, CREATOR_URLS, SONG_URLS);
+            new AntPathRequestMatcher("/api/events/**");
 
     private final TokenAuthenticationProvider provider;
 
@@ -74,25 +60,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(STATELESS)
                 .and()
                 .exceptionHandling()
-                .defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(FORBIDDEN), ADMIN_URLS)
-                .defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(UNAUTHORIZED), USER_URLS)
                 .and()
                 .authenticationProvider(provider)
                 .addFilterBefore(restAuthenticationFilter(), AnonymousAuthenticationFilter.class)
-                .authorizeRequests()
-                .requestMatchers(USER_URLS, SONG_URLS)
-                .hasAnyAuthority("USER")
-                .requestMatchers(ADMIN_URLS)
-                .hasAuthority("ADMIN")
-                .requestMatchers(CREATOR_URLS, SONG_URLS)
-                .hasAnyAuthority("CREATOR")
-                .and()
                 .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
                 .cors()
                 .and()
                 .logout().disable();
+
     }
 
     @Bean
@@ -109,17 +86,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         successHandler.setRedirectStrategy(new NoRedirectStrategy());
         return successHandler;
     }
-
-    /**
-     * Disable Spring boot automatic filter registration.
-     */
-    @Bean
-    FilterRegistrationBean<TokenAuthenticationFilter> disableAutoRegistration(
-            final TokenAuthenticationFilter filter) {
-        FilterRegistrationBean<TokenAuthenticationFilter> registration = new FilterRegistrationBean<>(filter);
-        registration.setEnabled(false);
-        return registration;
-    }
-
-
 }

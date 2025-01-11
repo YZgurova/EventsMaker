@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS user(
    `id` INT PRIMARY KEY,
     `username` VARCHAR(40) NOT NULL UNIQUE,
     `email` VARCHAR(50) NOT NULL UNIQUE,
-    `password` VARCHAR(60) NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
     FOREIGN KEY (id) REFERENCES credentials(id),
     constraint `ch_email` check (`email` regexp '[A-Za-z._0-9]+@[A-Za-z.]')
     ) ;

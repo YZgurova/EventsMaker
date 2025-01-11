@@ -57,17 +57,17 @@ public class MySQLUserRepository implements UserRepository {
 
     static class Queries {
         public static final String INSERT_USER =
-                "INSERT INTO user (username, email, password)" +
-                        "VALUES (?,?,?)";
+                "INSERT INTO user (id, username, email, password)" +
+                        "VALUES (?,?,?,?)";
         public static final String GET_USER =
                 """
-                select u.id, u.first_name, u.last_name,u.username, u.email,u.password
+                select u.id, u.username, u.email,u.password
                 FROM user as u
                 WHERE u.id=?;""";
 
         public static final String GET_USER_BY_USERNAME =
                 """
-                select u.id, u.first_name, u.last_name,u.username, u.email,u.password
+                select u.id, u.username, u.email,u.password
                 FROM user as u
                 WHERE u.username=?;""";
 

@@ -67,13 +67,12 @@ public class MySQLCredentialsRepository implements CredentialsRepository {
 
     @Override
     public Optional<CredentialsEntity> getCredentialsByAuthToken(String authToken) {
-
         return txTemplate.execute(status -> {
             Map<String, Object> creds = jdbc.queryForMap(
                     "SELECT c.id as id, c.username as username, c.password_hash as password_hash " +
                             "FROM credentials c " +
-                            "JOIN auth_tokens at ON c.id = at.credentials_id " +
-                            "WHERE at.token = ?", authToken);
+                            "JOIN auth_tokens a ON c.id = a.credentials_id " +
+                            "WHERE a.token = ?", authToken);
 
             return Optional.of(
                     new CredentialsEntity(
