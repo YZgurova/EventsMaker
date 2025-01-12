@@ -2,9 +2,11 @@ package com.EventsMaker.v1.services;
 
 import com.EventsMaker.v1.models.Credentials;
 import com.EventsMaker.v1.models.Event;
+import com.EventsMaker.v1.models.Transaction;
 import com.EventsMaker.v1.models.User;
 import com.EventsMaker.v1.repositories.entities.CredentialsEntity;
 import com.EventsMaker.v1.repositories.entities.EventEntity;
+import com.EventsMaker.v1.repositories.entities.TransactionEntity;
 import com.EventsMaker.v1.repositories.entities.UserEntity;
 
 public class Mappers
@@ -19,5 +21,9 @@ public class Mappers
 
     public static Credentials fromCredentialsEntity(CredentialsEntity credentialsEntity) {
         return new Credentials(credentialsEntity.id, credentialsEntity.username);
+    }
+
+    public static Transaction fromTransactionEntity(TransactionEntity transactionEntity) {
+        return new Transaction(transactionEntity.id, transactionEntity.userId, transactionEntity.transactionDescription, transactionEntity.Status);
     }
 }

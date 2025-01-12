@@ -1,9 +1,8 @@
 package com.EventsMaker.v1.payments;
 
 import com.EventsMaker.v1.auth.MyUser;
-//import com.EventsMaker.v1.services.SongService;
-//import com.EventsMaker.v1.services.TransactionsService;
-//import com.EventsMaker.v1.services.WalletService;
+import com.EventsMaker.v1.services.EventsService;
+import com.EventsMaker.v1.services.TransactionsService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
@@ -13,16 +12,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 
 public class StripeChargeService {
 
-//    @Resource
-//    private TransactionsService transactionsService;
-//    @Resource
-//    private WalletService walletService;
-//    @Resource
-//    private SongService songService;
+    @Resource
+    private TransactionsService transactionsService;
+    @Resource
+    private EventsService eventsService;
     private String transactionDetails="";
     private String status;
 
@@ -32,17 +28,13 @@ public class StripeChargeService {
             Charge charge = Charge.create(stripeCharge.getCharge());
             transactionDetails=charge.getId() + " was charged $" + charge.getAmount()/100 +" "+ charge.getCurrency();
             status=charge.getStatus();
-           // transactionsService.createTransaction(user.id, transactionDetails, status);
-            BigDecimal amount = BigDecimal.valueOf(charge.getAmount());
-            BigDecimal commissionPercents =new BigDecimal("10");
-            BigDecimal adminPart = amount.divide(commissionPercents);
-            amount=amount.subtract(adminPart);
-            //walletService.addMoney(1, adminPart);
+            transactionsService.createTransaction(user.id, transactionDetails, status);
+            eventsService.addBookedEvent(user.id, stripeCharge.eventId);
             return new ResponseEntity<String>("Success", HttpStatus.CREATED);
         } catch (StripeException e) {
             e.printStackTrace();
             status="failed";
-            //transactionsService.createTransaction(user.id, transactionDetails, status);
+            transactionsService.createTransaction(user.id, transactionDetails, status);
             return new ResponseEntity<String>("Failure", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

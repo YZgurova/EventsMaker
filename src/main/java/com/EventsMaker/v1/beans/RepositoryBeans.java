@@ -28,4 +28,9 @@ public class RepositoryBeans
             TransactionTemplate txTemplate, JdbcTemplate jdbcTemplate) {
         return new MySQLCredentialsRepository(txTemplate, jdbcTemplate);
     }
+
+    @Bean
+    public TransactionsRepository transactionsRepository(TransactionTemplate txTemplate, JdbcTemplate jdbcTemplate) {
+        return new MySQLTransactionRepository(txTemplate, jdbcTemplate);
+    }
 }

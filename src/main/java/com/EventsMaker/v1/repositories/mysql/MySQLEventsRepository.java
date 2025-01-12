@@ -1,6 +1,5 @@
 package com.EventsMaker.v1.repositories.mysql;
 
-import com.EventsMaker.v1.models.Event;
 import com.EventsMaker.v1.repositories.EventsRepository;
 import com.EventsMaker.v1.repositories.entities.EventEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -94,8 +93,8 @@ public class MySQLEventsRepository implements EventsRepository
     @Override
     public void deleteEvent(int id) {
         txTemplate.execute(status -> {
-            jdbc.update(Queries.DELETE_EVENT, id);
-            return null;
+            int rowsAffected = jdbc.update(Queries.DELETE_EVENT, id);
+            return rowsAffected > 0;
         });
     }
 

@@ -2,7 +2,6 @@ package com.EventsMaker.v1.services;
 
 import com.EventsMaker.v1.models.Event;
 import com.EventsMaker.v1.repositories.EventsRepository;
-import com.EventsMaker.v1.repositories.entities.EventEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

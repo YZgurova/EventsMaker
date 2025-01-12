@@ -2,8 +2,6 @@ package com.EventsMaker.v1.repositories;
 
 import com.EventsMaker.v1.repositories.entities.UserEntity;
 
-import java.util.List;
-
 public interface UserRepository
 {
     UserEntity createUser(
